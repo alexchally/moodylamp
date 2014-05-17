@@ -1,57 +1,48 @@
 /*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
- 
-  This example code is in the public domain.
+  This code is for adjusting the color and brightness of an RGB LED with three potentiometers, thee for R, G and B, and one for luminosity. 
+ Written By Alex Chally 
+ For License see www.github.com/alexchally/moodylamp
  */
- 
-// Pin 13 has an LED connected on most Arduino boards.
-// give it a name:
-int red = 13;
-int blue = 12;
-int green = 11;
+//Declaring some variables, you know, because.
+int red_led = 13;
+int blue_led = 12;
+int green_led = 11;
 
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the LEDS.
-  pinMode(red, OUTPUT);  
-  pinMode(green, OUTPUT);
-  pinMode(blue, OUTPUT);
-  
-  
+  pinMode(red_led, OUTPUT);  
+  pinMode(green_led, OUTPUT);
+  pinMode(blue_led, OUTPUT);
+
+  //starting a serial connection just to help debug 
   Serial.begin(9600);
-    
-    
-
 }
 
-// the loop routine runs over and over again forever:
 void loop() {
-  int brightpot = analogRead(A3);
-  float luminosity = brightpot * (255 / 1023.0);
-  int redpot = analogRead(A0);
-  float redbright = redpot * (luminosity / 1023.0);
-  int greenpot = analogRead(A1);
-  float greenbright = greenpot * (luminosity / 1023.0);
-  int bluepot = analogRead(A2);
-  float bluebright = bluepot * (luminosity / 1023.0);
- 
-  analogWrite(green, greenbright);   // turn the LED on (HIGH is the voltage level)
-  analogWrite(red, redbright);   // turn the LED on (HIGH is the voltage level)
-  analogWrite(blue, bluebright);   // turn the LED on (HIGH is the voltage level)
-  // delay(1000);               // wait for a second
-  // analogWrite(green, 000);    // turn the LED off by making the voltage LOW
- // analogWrite(red, 000);    // turn the LED off by making the voltage LOW
-  //analogWrite(blue, 000);    // turn the LED off by making the voltage LOW
- // delay(1000);               // wait for a second
-  
-  
-  
-    // read the input on analog pin 0:
- 
-  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  // read all the analog values for the R G B pots 
+  int red_pot = analogRead(A0);
+  int green_pot = analogRead(A1);
+  int blue_pot = analogRead(A2);
+  int bright_pot = analogRead(A3);
 
-  // print out the value you read:
+  // converts the brightness pot to a value from 0 to red255. 
+  float luminosity = bright_pot* (255 /1023.0); // converts the ADC from 0-1023 to 0-255, the proper range for PWM 
+
+  // adjust the brightness with respect to the luminosity pot
+  float red = (red_pot/1023.0)*(luminosity);
+  float green = (green_pot/1023.0) * (luminosity);
+  float blue = (blue_pot/1023.0) * (luminosity);
+
+  //Sets the values for the LEDs
+  analogWrite(red_led, red);   
+  analogWrite(green_led, green);   
+  analogWrite(blue_led, blue);  
+
+
+  // Used for debugging a value:
   Serial.println(luminosity);
+  // Serial.println(red_pot);
 
 }
+
