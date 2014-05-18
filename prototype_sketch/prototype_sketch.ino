@@ -23,17 +23,19 @@ void setup() {
 }
 
 void loop() {
-    int power_switch = digitalRead(power);
-    // read all the analog values for the R G B pots 
+    
+// read the power switch to see if the lights should be on
+  int power_switch = digitalRead(power);
+    
+  if (power_switch == 1)
+    {
+   // read all the analog values for the R G B pots 
     int red_pot = analogRead(A0);
     int green_pot = analogRead(A1);
     int blue_pot = analogRead(A2);
     int bright_pot = analogRead(A3);
-    
-  if (power_switch == 1)
-  {
-  // converts the brightness pot to a value from 0 to red255. 
-    float luminosity = (bright_pot/1023.0) * 250; // converts the ADC from 0-1023 to 0-250, the proper range for PWM when bias is factored in 
+. // converts the ADC from 0-1023 to 0-250, the proper range for PWM when bias is factored in 
+    float luminosity = (bright_pot/1023.0) * 250;  
 
   // adjust the brightness with respect to the luminosity pot. The bias value is to keep the lights from flickering when they get too low.
     float red = ((red_pot/1023.0) * (luminosity)) + bias;
@@ -45,7 +47,7 @@ void loop() {
     analogWrite(green_led, green);   
     analogWrite(blue_led, blue); 
     
-  }
+    }
    else
     {
      analogWrite(red_led, 0);   
